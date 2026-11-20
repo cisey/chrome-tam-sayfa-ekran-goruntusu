@@ -1,24 +1,47 @@
-# Tam Sayfa Ekran Görüntüsü (Chrome Eklentisi)
+# FullSnap
 
-Web sayfalarının tamamını otomatik kaydırarak yüksek çözünürlüklü **PNG** veya **JPEG** olarak yakalayan, Manifest V3 uyumlu Chrome eklentisi.
+**FullSnap** is a lightweight, privacy-first **Chrome Manifest V3** extension for capturing seamless, high-resolution **full-page** and **visible-area** screenshots as PNG or JPEG.
 
-## Özellikler
-- **Tam Sayfa Yakalama:** Sayfayı baştan sona otomatik kaydırır ve tüm bölümleri piksel hassasiyetinde tek bir görselde birleştirir.
-- **Satır Kayması Düzeltmesi (v1.1):** Bölümler birleştirilirken kaydırma bilgisine güvenmek yerine, ardışık görüntüler piksel piksel karşılaştırılarak gerçek kayma ölçülür; yumuşak kaydırma, ekran ölçeği (%125 vb.) ve geç yüklenen içerik kaynaklı satır kaymaları giderildi.
-- **Anında Durdurma / İptal:** Yakalama sırasında fikrinizi değiştirirseniz **Yakalamayı Durdur** düğmesiyle işlemi anında iptal edebilirsiniz; kaydırma konumu, sabit çubuklar ve kaydırma çubuğu otomatik olarak eski haline döner.
-- **Sabit Çubuk Koruması:** `fixed` ve `sticky` üst/alt menüleri ilk kareden sonra geçici olarak gizleyerek görselde tekrar etmesini önler; işlem bitince sayfayı eski haline döndürür.
-- **Görünür Alan Modu:** İsterseniz yalnızca ekranda görünen alanı anında yakalayabilirsiniz.
-- **Önizleme Sekmesi:** Yakalama bitince açılan sekmede görseli inceleyebilir, `%100` yakınlaştırabilir, panoya kopyalayabilir veya PNG/JPEG olarak indirebilirsiniz.
-- **Klavye Kısayolu:** `Alt + Shift + S` ile eklenti menüsünü hızlıca açabilirsiniz.
+Unlike basic scrolling screenshot tools that break on modern SPAs or full-screen modals, FullSnap automatically detects active inner scrollable containers, hides repeating sticky/fixed bars, and aligns consecutive frames pixel-by-pixel for clean stitching—even under smooth scrolling or 125% display scaling.
 
-## Chrome'a Nasıl Yüklenir?
-1. Bu ZIP dosyasını bilgisayarınızda bir klasöre çıkartın (ör. `tam-sayfa-ekran-goruntusu`).
-2. Chrome adres çubuğuna `chrome://extensions` yazıp Enter'a basın.
-3. Sağ üst köşedeki **Geliştirici modu (Developer mode)** anahtarını açın.
-4. Sol üstten **Paketi açılmış öğe yükle (Load unpacked)** düğmesine tıklayın.
-5. Çıkarttığınız `tam-sayfa-ekran-goruntusu` klasörünü (`manifest.json` dosyasının bulunduğu klasör) seçin.
-6. Araç çubuğundaki yapboz simgesinden eklentiyi sabitleyerek tek tıkla kullanmaya başlayabilirsiniz.
+## Features
 
-## Notlar
-- Chrome'un güvenlik kuralları gereği `chrome://` sistem sayfaları ve Chrome Web Mağazası üzerinde ekran görüntüsü alınamaz.
-- Çok uzun sayfalarda tarayıcı tuval sınırı (32.767 px yükseklik) aşılırsa üst kısım yakalanır ve önizleme ekranında uyarı gösterilir.
+- **Full-Page & Visible-Area Capture:** Capture an entire scrolling page or just the current viewport in one click.
+- **Pixel-Accurate Stitching:** Compares consecutive frames in grayscale to measure the exact vertical shift, preventing cut-off or misaligned lines caused by smooth scrolling, lazy-loaded content, or fractional DPI scaling (e.g., 125% on Windows).
+- **Modal & Inner Scroll Container Support:** Automatically detects when you are viewing a full-screen modal or nested scrollable panel and scrolls that container directly instead of the background page.
+- **Smart Sticky/Fixed Bar Handling:** Temporarily hides sticky and fixed headers/footers after the first frame so they never repeat down the screenshot—while leaving full-screen overlays intact and restoring everything when done.
+- **Instant Cancellation:** Stop a long capture at any moment; the page immediately restores its original scroll position, scrollbars, and sticky elements.
+- **Built-In Preview & Export Tab:** Opens a clean viewer tab (backed by IndexedDB for large images) where you can inspect at **Fit** or **100%** zoom, copy directly to the clipboard, or download as **PNG** or **JPEG**.
+- **Keyboard Shortcut:** Press `Alt + Shift + S` to open the extension popup from any tab.
+- **100% Local & Minimal Permissions:** Uses only `activeTab`, `scripting`, and `downloads`. No external servers, no tracking, no accounts.
+
+## Installation (Load Unpacked)
+
+1. Clone or download this repository:
+   ```bash
+   git clone https://github.com/cisey/fullsnap.git
+   ```
+2. Open Chrome and navigate to `chrome://extensions`.
+3. Enable **Developer mode** in the top-right corner.
+4. Click **Load unpacked** and select the cloned `fullsnap` folder (the directory containing `manifest.json`).
+5. Pin **FullSnap** to your Chrome toolbar for one-click access.
+
+## Project Structure
+
+| File / Folder | Purpose |
+| :--- | :--- |
+| `manifest.json` | Chrome Extension Manifest V3 configuration, permissions, and shortcut |
+| `background.js` | Service worker handling scroll detection, rate-limited capture, cancellation, and pixel-aligned `OffscreenCanvas` stitching |
+| `db.js` | IndexedDB helper for transferring large stitched image blobs without storage quota limits |
+| `popup.html`, `popup.css`, `popup.js` | Extension popup UI, capture options, live progress bar, and stop button |
+| `viewer.html`, `viewer.css`, `viewer.js` | Preview tab with zoom controls, clipboard copy, and PNG/JPEG export |
+| `icons/` | Extension icons (`16px`, `48px`, `128px`) |
+
+## Limitations
+
+- Chrome security policies prevent extensions from capturing internal browser pages (`chrome://`, `edge://`, `about:`) and the Chrome Web Store.
+- Extremely tall pages exceeding the browser's maximum canvas height (`32,767 px`) are capped at the upper section with a notice banner in the viewer.
+
+## License
+
+This project is licensed under the **MIT License** — see the [LICENSE.txt](https://www.google.com/search?q=LICENSE.txt) file for details.
