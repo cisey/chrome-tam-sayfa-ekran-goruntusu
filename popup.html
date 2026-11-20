@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tam Sayfa Ekran Görüntüsü</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <img src="icons/icon48.png" alt="Logo" class="logo" />
+        <div>
+          <h1>Tam Sayfa Ekran Görüntüsü</h1>
+          <span class="subtitle">Hızlı ve kayıpsız sayfa yakalama</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="actions">
+      <button id="captureFullBtn" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+          <path d="M12 7v10"></path>
+          <path d="m8 13 4 4 4-4"></path>
+        </svg>
+        Tam Sayfayı Yakala
+      </button>
+
+      <button id="captureVisibleBtn" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        Sadece Görünür Alanı Yakala
+      </button>
+    </section>
+
+    <section class="options">
+      <div class="option-row">
+        <label for="formatSelect">Dosya Formatı</label>
+        <select id="formatSelect">
+          <option value="png" selected>PNG (Kayıpsız)</option>
+          <option value="jpeg">JPEG (Küçük Boyut)</option>
+        </select>
+      </div>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="hideFixedCheck" checked />
+        <span>Sabit üst/alt çubukları tekrarlama</span>
+      </label>
+
+      <label class="checkbox-row">
+        <input type="checkbox" id="autoDownloadCheck" checked />
+        <span>Yakalama bitince otomatik indir</span>
+      </label>
+    </section>
+
+    <section id="progressBox" class="progress-box hidden">
+      <div class="progress-header">
+        <span id="statusText">Hazırlanıyor...</span>
+        <span id="percentText">0%</span>
+      </div>
+      <div class="progress-track">
+        <div id="progressBar" class="progress-fill"></div>
+      </div>
+      <button id="cancelBtn" class="btn btn-danger">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+        </svg>
+        Yakalamayı Durdur
+      </button>
+    </section>
+
+    <div id="infoBox" class="info-box hidden"></div>
+    <div id="errorBox" class="error-box hidden"></div>
+
+    <footer class="footer">
+      <span>Kısayol: <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd></span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
