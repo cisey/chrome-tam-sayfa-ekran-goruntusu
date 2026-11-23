@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ekran Görüntüsü Önizleme</title>
+  <title>FullSnap — Önizleme</title>
   <link rel="stylesheet" href="viewer.css" />
 </head>
 <body>
@@ -25,6 +25,8 @@
       <button id="copyBtn" class="tool-btn">Panoya Kopyala</button>
       <button id="downloadPngBtn" class="tool-btn primary">PNG İndir</button>
       <button id="downloadJpgBtn" class="tool-btn">JPEG İndir</button>
+      <button id="downloadPdfA4Btn" class="tool-btn" title="A4 sayfalara bölünmüş PDF indir">PDF (A4)</button>
+      <button id="downloadPdfSingleBtn" class="tool-btn" title="Kesintisiz tek uzun sayfa PDF indir">PDF (Tek Sayfa)</button>
     </div>
   </header>
 
@@ -42,6 +44,7 @@
   </main>
 
   <script src="db.js"></script>
+  <script src="pdf.js"></script>
   <script src="viewer.js"></script>
 </body>
 </html>

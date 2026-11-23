@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Tam Sayfa Ekran Görüntüsü",
-  "version": "1.1.0",
-  "description": "Web sayfalarının tamamını veya görünür alanını tek tıkla yüksek çözünürlüklü PNG/JPEG olarak yakalayın.",
+  "name": "FullSnap — Tam Sayfa Ekran Görüntüsü",
+  "version": "1.2.0",
+  "description": "Web sayfalarının tamamını veya görünür alanını tek tıkla yüksek çözünürlüklü PNG, JPEG veya PDF olarak yakalayın.",
   "permissions": [
     "activeTab",
     "scripting",
@@ -10,7 +10,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Tam Sayfa Ekran Görüntüsü Al",
+    "default_title": "FullSnap — Tam Sayfa Ekran Görüntüsü Al",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",

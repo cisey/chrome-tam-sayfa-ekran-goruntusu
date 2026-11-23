@@ -10,6 +10,8 @@ const actualBtn = document.getElementById('actualBtn');
 const copyBtn = document.getElementById('copyBtn');
 const downloadPngBtn = document.getElementById('downloadPngBtn');
 const downloadJpgBtn = document.getElementById('downloadJpgBtn');
+const downloadPdfA4Btn = document.getElementById('downloadPdfA4Btn');
+const downloadPdfSingleBtn = document.getElementById('downloadPdfSingleBtn');
 
 let currentRecord = null;
 let currentObjectUrl = null;
@@ -74,7 +76,29 @@ async function convertBlobFormat(sourceBlob, targetMime, quality = 0.92) {
 }
 
 function replaceExtension(filename, newExt) {
-  return filename.replace(/\.(png|jpe?g)$/i, `.${newExt}`);
+  return filename.replace(/\.(png|jpe?g|pdf)$/i, `.${newExt}`);
+}
+
+async function exportPdf(mode) {
+  if (!currentRecord) return;
+  const label = mode === 'single' ? 'Tek sayfa PDF' : 'A4 PDF';
+  downloadPdfA4Btn.disabled = true;
+  downloadPdfSingleBtn.disabled = true;
+  showToast(`${label} hazırlanıyor...`);
+  try {
+    const pdfBlob = await createPdfFromImageBlob(currentRecord.blob, {
+      mode,
+      quality: 0.92
+    });
+    const pdfName = replaceExtension(currentRecord.filename, 'pdf');
+    triggerBlobDownload(pdfBlob, pdfName);
+    showToast(`${pdfName} indirildi.`);
+  } catch (err) {
+    showToast(err.message || 'PDF oluşturma başarısız.', true);
+  } finally {
+    downloadPdfA4Btn.disabled = false;
+    downloadPdfSingleBtn.disabled = false;
+  }
 }
 
 fitBtn.addEventListener('click', () => {
@@ -113,6 +137,9 @@ downloadJpgBtn.addEventListener('click', async () => {
   }
 });
 
+downloadPdfA4Btn.addEventListener('click', () => exportPdf('a4'));
+downloadPdfSingleBtn.addEventListener('click', () => exportPdf('single'));
+
 copyBtn.addEventListener('click', async () => {
   if (!currentRecord) return;
   try {
@@ -150,17 +177,28 @@ async function init() {
     currentObjectUrl = URL.createObjectURL(record.blob);
     previewImage.src = currentObjectUrl;
 
-    document.title = `${record.title} — Ekran Görüntüsü`;
+    document.title = `${record.title} — FullSnap`;
     pageTitleEl.textContent = record.title;
-    metaInfoEl.textContent = `${record.width} × ${record.height} px • ${formatBytes(record.sizeBytes)} • ${record.ext.toUpperCase()}`;
+    const displayFormat = record.outputFormat === 'pdf-single'
+      ? 'PDF (Tek Sayfa)'
+      : record.outputFormat === 'pdf'
+        ? 'PDF (A4)'
+        : record.ext.toUpperCase();
+    metaInfoEl.textContent = `${record.width} × ${record.height} px • ${formatBytes(record.sizeBytes)} • ${displayFormat}`;
 
     if (record.truncated) {
       warningBanner.classList.remove('hidden');
     }
 
     if (record.autoDownload) {
-      triggerBlobDownload(record.blob, record.filename);
-      showToast(`${record.filename} indirildi.`);
+      if (record.outputFormat === 'pdf') {
+        await exportPdf('a4');
+      } else if (record.outputFormat === 'pdf-single') {
+        await exportPdf('single');
+      } else {
+        triggerBlobDownload(record.blob, record.filename);
+        showToast(`${record.filename} indirildi.`);
+      }
     }
   } catch (err) {
     previewImage.classList.add('hidden');

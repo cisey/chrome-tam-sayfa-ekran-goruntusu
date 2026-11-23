@@ -690,8 +690,9 @@ async function finalizeAndOpenViewer({ canvas, tab, format, quality, autoDownloa
   throwIfCancelled();
   sendProgress(96, 'Dosya hazırlanıyor...');
 
+  const isPdf = format === 'pdf' || format === 'pdf-single';
   const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
-  const ext = format === 'jpeg' ? 'jpg' : 'png';
+  const ext = isPdf ? 'pdf' : (format === 'jpeg' ? 'jpg' : 'png');
   const blobOptions = format === 'jpeg' ? { type: mimeType, quality } : { type: mimeType };
   const blob = await canvas.convertToBlob(blobOptions);
 
@@ -705,6 +706,7 @@ async function finalizeAndOpenViewer({ canvas, tab, format, quality, autoDownloa
     blob,
     mimeType,
     ext,
+    outputFormat: format,
     filename,
     title: tab.title || 'Adsız Sayfa',
     url: tab.url || '',

@@ -11,12 +11,14 @@ const cancelBtn = document.getElementById('cancelBtn');
 const infoBox = document.getElementById('infoBox');
 const errorBox = document.getElementById('errorBox');
 
+const ALLOWED_FORMATS = new Set(['png', 'jpeg', 'pdf', 'pdf-single']);
+
 function loadPreferences() {
   const savedFormat = localStorage.getItem('ts_format');
   const savedHideFixed = localStorage.getItem('ts_hideFixed');
   const savedAutoDownload = localStorage.getItem('ts_autoDownload');
 
-  if (savedFormat === 'png' || savedFormat === 'jpeg') {
+  if (ALLOWED_FORMATS.has(savedFormat)) {
     formatSelect.value = savedFormat;
   }
   if (savedHideFixed !== null) {
@@ -91,7 +93,6 @@ cancelBtn.addEventListener('click', async () => {
   try {
     await chrome.runtime.sendMessage({ type: 'CANCEL_CAPTURE' });
   } catch (_) {
-    // Arka plan yanıt vermezse arayüzü serbest bırak
     progressBox.classList.add('hidden');
     setBusy(false);
   }
@@ -140,7 +141,6 @@ captureVisibleBtn.addEventListener('click', () => startCapture('visible'));
 
 loadPreferences();
 
-// Popup kapatılıp tekrar açıldığında devam eden bir yakalama varsa durdurma seçeneğiyle göster
 chrome.runtime.sendMessage({ type: 'GET_STATUS' }).then((res) => {
   if (res && res.isCapturing) {
     setBusy(true);
